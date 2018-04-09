@@ -16,31 +16,41 @@
 #define REG_DISPSTAT 0x04000004
 #define REG_DISPSTAT 0x040000060
 
+typedef unsigned char   byte;
 typedef unsigned char   u8;
 typedef unsigned short  u16;
 typedef unsigned int    u32;
+
+
+void line(u32 size, u16 val)
+{
+    u32 vrama = aVRAM;
+    u32 count = 0;
+    if (size > 240) return 0;
+    while (count < size)
+    {
+	*(u16*)vrama = val;
+	vrama+=2;
+	count++;
+    }
+}
+
+void put(u32 x, u32 y, u16 val)
+{
+    *(u16*)(0x06000000+(x*y)) = val;
+}
 
 int main()
 {
     *(u16*)REG_DISPCNT = 0x0403;
 
 
-    unsigned int vram = aVRAM;
-    u16 lsd = 0x1bad;
-    u16 des = 0xa;
-    while (vram != 0x6017FFF)
-    {
-	*(u16*)vram = lsd;
-	vram++;
-	des++;
-	lsd+= des;
-	if (lsd > 0xffaa) lsd = 0x0bca;
-	if (des > 0xab) des = 0;
+    u32 vram = aVRAM;
+    int count=0;
 
-	if (vram > 0x6017FAB)
-	    vram = aVRAM;
-	
-    }
+    line(25, ZRQ);
+
+    put(100, 100, ZRQ);
     
     while(1);
 }
