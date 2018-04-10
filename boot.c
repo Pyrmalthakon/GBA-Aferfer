@@ -21,36 +21,30 @@ typedef unsigned char   u8;
 typedef unsigned short  u16;
 typedef unsigned int    u32;
 
+u32 pos = 0;
 
-void line(u32 size, u16 val)
+void putpixel(u32 x, u32 y, u16 val) 
 {
-    u32 vrama = aVRAM;
-    u32 count = 0;
-    if (size > 240) return 0;
-    while (count < size)
-    {
-	*(u16*)vrama = val;
-	vrama+=2;
-	count++;
-    }
+    u32 addr = 0x06000001;
+    addr += x * 2;
+    addr += (y * 240)*2;
+    *(u16*)addr = val; 
 }
 
-void put(u32 x, u32 y, u16 val)
+void print(u16 val)
 {
-    *(u16*)(0x06000000+(x*y)) = val;
+    *(u16*)(0x06000001+(pos*2)) = val;
+    pos++;
 }
 
 int main()
 {
     *(u16*)REG_DISPCNT = 0x0403;
-
-
-    u32 vram = aVRAM;
-    int count=0;
-
-    line(25, ZRQ);
-
-    put(100, 100, ZRQ);
+    
+    print(CYAN);
+    print(HMR);
+    print(ZRQ);
+    
     
     while(1);
 }
