@@ -1,6 +1,7 @@
+/* Dimensions de l'écran GBA. */
 #define WIDTH 240
 #define HEIGHT 160
-
+/*Quelques couleurs à définir. */
 #define KHL 0x0000
 #define HMR 0x001F
 #define SFR 0x03FF
@@ -8,7 +9,7 @@
 #define CYAN 0x7FE0
 #define BYD 0x7FFF
 
-
+/*Emplacements importants dans la RAM de la GBA.*/
 #define aIO 0x04000000
 #define aVRAM 0x06000000
 
@@ -25,6 +26,7 @@ u32 pos = 0;
 
 void putpixel(u32 x, u32 y, u16 val) 
 {
+    // Simple fonction qui modifie la valeur d'un point donné de l'écran par modification de l'emplacement associé de la VRAM.
     u32 addr = 0x06000001;
     addr += x * 2;
     addr += (y * 240)*2;
@@ -33,6 +35,7 @@ void putpixel(u32 x, u32 y, u16 val)
 
 void print(u16 val)
 {
+    //Plus ou moins la même chose que précédemment, mais saute directement au prochain pixel pour les prochains appels de la fonction.
     *(u16*)(0x06000001+(pos*2)) = val;
     pos++;
 }
